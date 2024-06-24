@@ -28,19 +28,4 @@ def displayMessage(message):
     print(f"\n{message}")
 
 
-def getStateKey(board):
-    """
-    Converts 2D list representing the board state into a string key
-    for that state. Keys are used for Q-value hashing.
 
-    Parameters
-    ----------
-    board : list of lists
-        the current game board
-    """
-    key = ""
-    for row in board:
-        for elt in row:
-            key += elt
-
-    return key
