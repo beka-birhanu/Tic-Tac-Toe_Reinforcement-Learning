@@ -28,6 +28,7 @@ class Teacher:
         # Check for diagonal wins
         a = [board[0][0], board[1][1], board[2][2]]
         b = [board[0][2], board[1][1], board[2][0]]
+
         if a.count("-") == 1 and a.count(key) == 2:
             ind = a.index("-")
             return ind, ind
@@ -39,16 +40,19 @@ class Teacher:
                 return 1, 1
             else:
                 return 2, 0
+
         # Now check for 2 in a row/column + empty 3rd
         for i in range(3):
             c = [board[0][i], board[1][i], board[2][i]]
             d = [board[i][0], board[i][1], board[i][2]]
+
             if c.count("-") == 1 and c.count(key) == 2:
                 ind = c.index("-")
                 return ind, i
             elif d.count("-") == 1 and d.count(key) == 2:
                 ind = d.index("-")
                 return i, ind
+
         return None
 
     def blockWin(self, board):
@@ -78,6 +82,7 @@ class Teacher:
                 return 0, 2
             elif board[1][1] == "-" and board[1][0] == "-" and board[2][1] == "-":
                 return 1, 1
+
         # Check all cross corners
         elif board[0][0] == "X" and board[2][2] == "X":
             if board[1][0] == "-" and board[2][1] == "-" and board[2][0] == "-":
@@ -89,11 +94,13 @@ class Teacher:
                 return 2, 2
             elif board[1][0] == "-" and board[0][1] == "-" and board[0][0] == "-":
                 return 0, 0
+
         return None
 
     def blockFork(self, board):
         """Block the opponents fork if she has one available."""
         corners = [board[0][0], board[2][0], board[0][2], board[2][2]]
+
         # Check all adjacent side middles
         if board[1][0] == "O" and board[0][1] == "O":
             if board[0][0] == "-" and board[2][0] == "-" and board[0][2] == "-":
@@ -115,6 +122,7 @@ class Teacher:
                 return 0, 2
             elif board[1][1] == "-" and board[1][0] == "-" and board[2][1] == "-":
                 return 1, 1
+
         # Check all cross corners (first check for double fork opp using the corners array)
         elif corners.count("-") == 1 and corners.count("O") == 2:
             return 1, 2
@@ -128,6 +136,7 @@ class Teacher:
                 return 2, 2
             elif board[1][0] == "-" and board[0][1] == "-" and board[0][0] == "-":
                 return 0, 0
+
         return None
 
     def center(self, board):
@@ -147,6 +156,7 @@ class Teacher:
             return 2, 0
         elif board[2][2] == "O" and board[0][0] == "-":
             return 0, 0
+
         # Pick any corner if no opposites are available
         elif board[0][0] == "-":
             return 0, 0
@@ -156,6 +166,7 @@ class Teacher:
             return 0, 2
         elif board[2][2] == "-":
             return 2, 2
+
         return None
 
     def sideEmpty(self, board):
@@ -182,32 +193,40 @@ class Teacher:
     def makeMove(self, board):
         """
         Trainer goes through a hierarchy of moves, making the best move that
-        is currently available each time. A touple is returned that represents
+        is currently available each time. A tuple is returned that represents
         (row, col).
         """
         # Chose randomly with some probability so that the teacher does not always win
         if random.random() > self.ability_level:
             return self.randomMove(board)
+
         # Follow optimal strategy
         a = self.win(board)
         if a is not None:
             return a
+
         a = self.blockWin(board)
         if a is not None:
             return a
+
         a = self.fork(board)
         if a is not None:
             return a
+
         a = self.blockFork(board)
         if a is not None:
             return a
+
         a = self.center(board)
         if a is not None:
             return a
+
         a = self.corner(board)
         if a is not None:
             return a
+
         a = self.sideEmpty(board)
         if a is not None:
             return a
+
         return self.randomMove(board)
