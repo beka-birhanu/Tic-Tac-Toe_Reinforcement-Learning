@@ -26,16 +26,19 @@ class Qlearner:
         self.gamma = gamma
         self.eps = eps
         self.eps_decay = eps_decay
+
         # Possible actions correspond to the set of all x,y coordinate pairs
         self.actions = []
         for i in range(3):
             for j in range(3):
                 self.actions.append((i, j))
+
         # Initialize Q values to 0 for all state-action pairs.
         # Access value for action a, state s via Q[a][s]
         self.Q = {}
         for action in self.actions:
             self.Q[action] = collections.defaultdict(int)
+
         # Keep a list of reward received at each episode
         self.rewards = []
 
@@ -50,6 +53,7 @@ class Qlearner:
         """
         # Only consider the allowed actions (empty board spaces)
         possible_actions = [a for a in self.actions if s[a[0] * 3 + a[1]] == "-"]
+
         if random.random() < self.eps:
             # Random choose.
             action = possible_actions[random.randint(0, len(possible_actions) - 1)]
@@ -62,7 +66,7 @@ class Qlearner:
             # If multiple actions were max, then sample from them
             action = random.choice(max_actions)
 
-        # update epsilon; geometric decay
+        # Update epsilon; geometric decay
         self.eps *= 1.0 - self.eps_decay
 
         return action
@@ -91,23 +95,23 @@ class Qlearner:
         r : int
             reward received after executing action "a" in state "s"
         """
-        # Update Q(s,a)
+        # Update Q(s, a)
         if s_ is not None:
-            # hold list of Q values for all a_,s_ pairs. We will access the max later
+            # Hold list of Q values for all a_, s_ pairs. We will access the max later
             possible_actions = [
                 action
                 for action in self.actions
                 if s_[action[0] * 3 + action[1]] == "-"
             ]
             Q_options = [self.Q[action][s_] for action in possible_actions]
-            # update
+
+            # Update
             self.Q[a][s] += self.alpha * (
                 r + self.gamma * max(Q_options) - self.Q[a][s]
             )
         else:
-            # terminal state update
+            # Terminal state update
             self.Q[a][s] += self.alpha * (r - self.Q[a][s])
 
-        # add r to rewards list
+        # Add r to rewards list
         self.rewards.append(r)
-
