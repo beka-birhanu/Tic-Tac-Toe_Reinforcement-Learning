@@ -1,4 +1,4 @@
-# Tic-Tac-Toe RL Agent
+# Tic Tac Toe with Reinforcement Learning 
 
 ## Source Code
 
