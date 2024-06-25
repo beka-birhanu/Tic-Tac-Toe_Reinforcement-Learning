@@ -54,7 +54,7 @@ class GameLearning(object):
                 sys.exit(0)
         else:
             # check if agent state file already exists, and ask user whether to overwrite if so
-            if args.agent_type == "q" and os.path.isfile(self.agent_path):
+            if os.path.isfile(self.agent_path):
                 while True:
                     response = input(
                         "An agent state is already saved for this type. "
@@ -113,14 +113,7 @@ class GameLearning(object):
 if __name__ == "__main__":
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="Play Tic-Tac-Toe.")
-    parser.add_argument(
-        "-a",
-        "--agent_type",
-        type=str,
-        default="q",
-        help="Specify the computer agent learning algorithm. "
-        "AGENT_TYPE='q' for Q-learning and ='s' for Sarsa-learning",
-    )
+
     parser.add_argument(
         "-l", "--load", action="store_true", help="whether to load trained agent"
     )
@@ -139,9 +132,6 @@ if __name__ == "__main__":
         help="whether to plot reward vs. episode of stored agent " "and quit",
     )
     args = parser.parse_args()
-    assert (
-        args.agent_type == "q" or args.agent_type == "s"
-    ), "learner type must be either 'q' or 's'."
     if args.plot:
         assert args.load, "Must load an agent to plot reward."
         assert (
