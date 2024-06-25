@@ -36,6 +36,8 @@ class Qlearner:
         self.Q = {}
         for action in self.actions:
             self.Q[action] = collections.defaultdict(int)
+        # Keep a list of reward received at each episode
+        self.rewards = []
 
     def get_action(self, s):
         """
@@ -72,7 +74,7 @@ class Qlearner:
         with open(path, "wb") as f:
             pickle.dump(self, f)
 
-    def update(self, s, s_, a, r):
+    def update(self, s, s_, a, a_, r):
         """
         Perform the Q-Learning update of Q values.
 
@@ -105,3 +107,7 @@ class Qlearner:
         else:
             # terminal state update
             self.Q[a][s] += self.alpha * (r - self.Q[a][s])
+
+        # add r to rewards list
+        self.rewards.append(r)
+
